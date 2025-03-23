@@ -29,7 +29,6 @@ This project automates the following:
 │   ├── main.tf              # Main Terraform configuration
 │   ├── variables.tf         # Terraform variables definition
 │   ├── outputs.tf           # Terraform outputs
-├── .env.example             # example env file
 └── README.md                # This file
 ```
 
@@ -42,13 +41,14 @@ This project automates the following:
 
 ## How to Run the Project
 
-### 1. Edit .env.example
+### 1. Create .env file in root
+
 ```sh
-AWS_ACCESS_KEY=
-AWS_SECRET_KEY=
-AWS_SESSION_TOKEN=
-AWS_REGION=us-east-1
-SSH_PUBLIC_KEY=
+export AWS_ACCESS_KEY=""
+export AWS_SECRET_KEY=""
+export AWS_SESSION_TOKEN=""
+export AWS_REGION="us-east-1"
+export SSH_PUBLIC_KEY=""
 ```
 
 ### 2. Run the script
@@ -69,10 +69,24 @@ chmod +x run_now.sh
 
 ## Screenshots
 
-- ![Packer Build Output](screenshots/packer-build.png)
+- Packer Build
+![Packer Build Output1](screenshots/packer-build1.png)
+![Packer Build Output2](screenshots/packer-build2.png)
 
-- ![Terraform Apply Output](screenshots/terraform-apply.png)
+- Terraform Init
+![Terraform Init Output](screenshots/terraform_init.png)
 
+- Terraform Plan
+![Terraform Plan Output](screenshots/terraform_plan.png)
+
+- Terraform Apply
+![Terraform Apply Output](screenshots/terraform_apply.png)
+
+- AWS Instances
+![EC2](screenshots/ec2.png)
+
+- AWS AMI (you will see just 1)
+![AMI](screenshots/ami.png)
 
 ## Conclusion
 

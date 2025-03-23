@@ -6,16 +6,7 @@ ROOT_DIR=$(pwd)
 PACKER_DIR="${ROOT_DIR}/packer"
 TERRAFORM_DIR="${ROOT_DIR}/terraform"
 
-# Copy .env.example to .env if it doesn't exist
-if [ ! -f "${ROOT_DIR}/.env" ]; then
-  cp "${ROOT_DIR}/.env.example" "${ROOT_DIR}/.env"
-  echo "Created .env file from example"
-else
-  echo ".env file already exists"
-fi
-
-# Export environment variables
-export $(grep -v '^#' "${ROOT_DIR}/.env" | xargs)
+source .env
 
 # Build Packer image
 echo "Building Packer AMI..."

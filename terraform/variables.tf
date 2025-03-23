@@ -50,12 +50,6 @@ variable "custom_ami_id" {
   type        = string
 }
 
-variable "key_name" {
-  description = "The name of the EC2 key pair"
-  type        = string
-  default     = "vockey"
-}
-
 variable "bastion_instance_type" {
   description = "Instance type for the bastion host"
   type        = string
