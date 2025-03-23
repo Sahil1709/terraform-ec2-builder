@@ -2,13 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-provider "tls" {}
-
-resource "tls_private_key" "generated_key" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
@@ -28,11 +21,6 @@ module "vpc" {
   tags = {
     Environment = var.environment
   }
-}
-
-resource "aws_key_pair" "auto_key" {
-  key_name   = "auto-key"
-  public_key = tls_private_key.generated_key.public_key_openssh
 }
 
 resource "aws_security_group" "bastion" {
@@ -79,7 +67,6 @@ resource "aws_instance" "bastion" {
   ami                         = var.custom_ami_id
   instance_type               = var.bastion_instance_type
   subnet_id                   = module.vpc.public_subnets[0]
-  key_name                    = aws_key_pair.auto_key.key_name
   security_groups             = [aws_security_group.bastion.id]
   associate_public_ip_address = true
 
@@ -93,7 +80,6 @@ resource "aws_instance" "private_instances" {
   ami                    = var.custom_ami_id
   instance_type          = var.private_instance_type
   subnet_id              = element(module.vpc.private_subnets, count.index)
-  key_name               = aws_key_pair.auto_key.key_name
   vpc_security_group_ids = [aws_security_group.private.id]
 
   tags = {

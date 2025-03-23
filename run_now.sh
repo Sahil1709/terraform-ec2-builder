@@ -10,6 +10,15 @@ PACKER_DIR="${ROOT_DIR}/packer"
 TERRAFORM_DIR="${ROOT_DIR}/terraform"
 SSH_DIR="${ROOT_DIR}/.ssh"
 
+# Install Packer Plugins
+echo "Checking if Packer plugins are installed..."
+if ! packer plugins installed | grep -q 'github.com/hashicorp/amazon'; then
+  echo "Installing Packer plugins..."
+  packer plugins install github.com/hashicorp/amazon
+else
+  echo "Required Packer plugins are already installed." ;
+fi
+
 mkdir -p "${SSH_DIR}"
 chmod 700 "${SSH_DIR}"
 
