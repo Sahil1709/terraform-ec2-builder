@@ -60,4 +60,5 @@ echo "Deployment complete!"
 
 # Testing
 echo "Running tests..."
-.${ROOT_DIR}/scripts/test.sh
+cd "${ROOT_DIR}"
+./scripts/test.sh
