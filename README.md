@@ -37,7 +37,6 @@ This project automates the following:
 - [Packer](https://www.packer.io/) installed on your local machine
 - [Terraform](https://www.terraform.io/) installed on your local machine
 - AWS CLI credentials ready
-- Your SSH public key ready
 
 ## How to Run the Project
 
@@ -48,7 +47,6 @@ export AWS_ACCESS_KEY=""
 export AWS_SECRET_KEY=""
 export AWS_SESSION_TOKEN=""
 export AWS_REGION="us-east-1"
-export SSH_PUBLIC_KEY=""
 ```
 
 ### 2. Run the script
@@ -58,14 +56,19 @@ chmod +x run_now.sh
 ```
 
 ### 3. Verify the Deployment:
-- Check your AWS console to see the new VPC, bastion host, and private EC2 instances.
-- Log in to the bastion host (using your private key) to verify network connectivity.
-- Use the public Elastic IP associated with your bastion host to access the instances if needed.
+The run now script by default will run the tests to verify the deployment. You can also run it manually
+```sh
+chmod +x scripts/*
+./scripts/test.sh
+```
 
 ## Expected Outputs
 
 - **Packer:** A custom AMI with Docker installed and your SSH key configured.
 - **Terraform:** A new VPC with public and private subnets, one bastion host (accessible via your IP on port 22), and 6 EC2 instances in the private subnet launched with the custom AMI.
+   - vpc id
+   - bastion public ip
+   - 6 private instances ip
 
 ## Screenshots
 
@@ -81,6 +84,9 @@ chmod +x run_now.sh
 
 - Terraform Apply
 ![Terraform Apply Output](screenshots/terraform_apply.png)
+
+- Tests
+![Tests](screenshots/test.png)
 
 - AWS Instances
 ![EC2](screenshots/ec2.png)

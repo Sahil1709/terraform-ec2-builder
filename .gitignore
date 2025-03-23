@@ -3,4 +3,5 @@
 *.tfstate*
 *.lock*
 *.log
+.ssh
 .DS_Store
