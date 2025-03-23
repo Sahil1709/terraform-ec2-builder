@@ -29,6 +29,13 @@ This project automates the following:
 │   ├── main.tf              # Main Terraform configuration
 │   ├── variables.tf         # Terraform variables definition
 │   ├── outputs.tf           # Terraform outputs
+|   └── versions.tf          # Terraform Version
+├── scripts/
+|   ├── destroy.sh           # Terraform Destroy
+|   ├── install_docker.sh    # Install script 
+|   ├── test.sh              # Test script to see if everything works
+├── run_now.sh               # Entrypoint
+├── .env                     # env file
 └── README.md                # This file
 ```
 
