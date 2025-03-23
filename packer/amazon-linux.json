@@ -22,7 +22,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "../scripts/install_docker.sh",
+      "script": "scripts/install_docker.sh",
       "environment_vars": ["SSH_PUBLIC_KEY={{user `ssh_public_key`}}"]
     }
   ]
