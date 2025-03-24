@@ -69,6 +69,13 @@ chmod +x scripts/*
 ./scripts/test.sh
 ```
 
+#### 4. (Optional Destroy script)
+Run this script to destroy every reasource created
+```sh
+./scripts/destroy.sh
+```
+(make sure to run it from the project's root directory or you will face path issues.)
+
 ## Expected Outputs
 
 - **Packer:** A custom AMI with Docker installed and your SSH key configured.
