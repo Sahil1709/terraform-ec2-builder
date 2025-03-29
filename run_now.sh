@@ -45,7 +45,7 @@ scp -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/nu
 
 # SSH into the Bastion host and run the install_ansible script, source .env, and then run the ansible playbook.
 echo "Connecting to Bastion and running ansible..."
-ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@${BASTION_IP} <<'EOF'
+ssh -A -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@${BASTION_IP} <<'EOF'
 scource .env
 echo "Installing dependencies..."
 if ! command -v git &> /dev/null
@@ -57,9 +57,8 @@ else
 fi
 
 echo "Cloning Ansible playbook repository..."
-git clone https://github.com/Sahil1709/terraform-ec2-builder.git
+git clone -b multi-os-ec2 --single-branch https://github.com/Sahil1709/terraform-ec2-builder.git
 cd terraform-ec2-builder
-git checkout multi-os-ec2
 chmod +x scripts/*
 cd scripts
 ./scripts/install_ansible.sh

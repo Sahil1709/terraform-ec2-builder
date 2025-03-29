@@ -6,4 +6,4 @@ filters:
   "tag:Name": "Private Instance*"
 keyed_groups:
   - key: tags.OS
-    prefix: "os_"
+    prefix: "os"

@@ -1,6 +1,6 @@
 ---
 - name: Manage EC2 instances
-  hosts: private_instances
+  hosts: aws_ec2
   become: yes
   gather_facts: yes
 
