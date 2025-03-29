@@ -45,9 +45,17 @@ variable "my_ip" {
   type        = string
 }
 
-variable "custom_ami_id" {
-  description = "The custom AMI ID created using Packer"
+# AMI IDs
+variable "ubuntu_ami_id" {
+  description = "AMI ID for Ubuntu instances"
   type        = string
+  default     = "ami-084568db4383264d4"
+}
+
+variable "amazon_ami_id" {
+  description = "AMI ID for Amazon Linux instances"
+  type        = string
+  default     = "ami-071226ecf16aa7d96"
 }
 
 variable "bastion_instance_type" {

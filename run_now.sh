@@ -10,40 +10,7 @@ PACKER_DIR="${ROOT_DIR}/packer"
 TERRAFORM_DIR="${ROOT_DIR}/terraform"
 SSH_DIR="${ROOT_DIR}/.ssh"
 
-# Install Packer Plugins
-echo "Checking if Packer plugins are installed..."
-if ! packer plugins installed | grep -q 'github.com/hashicorp/amazon'; then
-  echo "Installing Packer plugins..."
-  packer plugins install github.com/hashicorp/amazon
-else
-  echo "Required Packer plugins are already installed." ;
-fi
-
-mkdir -p "${SSH_DIR}"
-chmod 700 "${SSH_DIR}"
-
-# Generate SSH key pair if not exists
-if [ ! -f "${SSH_DIR}/id_rsa" ]; then
-  echo "Generating new SSH key pair..."
-  ssh-keygen -t rsa -b 4096 -N "" -f "${SSH_DIR}/id_rsa"
-  chmod 600 "${SSH_DIR}/id_rsa"
-  chmod 644 "${SSH_DIR}/id_rsa.pub"
-fi
-
-# Export SSH public key
-SSH_PUBLIC_KEY=$(cat "${SSH_DIR}/id_rsa.pub")
-export SSH_PUBLIC_KEY
-
 source .env
-
-# Build Packer image
-echo "Building Packer AMI..."
-cd "${PACKER_DIR}"
-packer build amazon-linux.json | tee packer.log
-
-# Extract AMI ID from Packer output
-AMI_ID=$(grep -Eo 'ami-[0-9a-f]{17}' packer.log | tail -1)
-echo "Created AMI ID: ${AMI_ID}"
 
 # Get public IP
 MY_IP=$(curl -s ifcfg.me)/32
@@ -52,22 +19,54 @@ echo "Detected public IP: ${MY_IP}"
 # Run Terraform
 echo "Initializing Terraform..."
 cd "${TERRAFORM_DIR}"
-terraform init
+if [ ! -d ".terraform" ]; then
+  echo "Terraform not initialized. Initializing now..."
+  terraform init
+else
+  echo "Terraform already initialized. Skipping initialization."
+fi
 
 echo "Planning infrastructure..."
 terraform plan \
-  -var="custom_ami_id=${AMI_ID}" \
   -var="my_ip=${MY_IP}"
 
 echo "Applying infrastructure..."
 terraform apply \
-  -var="custom_ami_id=${AMI_ID}" \
   -var="my_ip=${MY_IP}" \
   -auto-approve
 
 echo "Deployment complete!"
 
-# Testing
-echo "Running tests..."
-cd "${ROOT_DIR}"
-./scripts/test.sh
+BASTION_IP=$(terraform output -raw bastion_public_ip)
+echo "Bastion IP: ${BASTION_IP}"
+
+echo "Copying .env to Bastion host..."
+scp -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null .env ec2-user@${BASTION_IP}:/home/ec2-user/
+
+# SSH into the Bastion host and run the install_ansible script, source .env, and then run the ansible playbook.
+echo "Connecting to Bastion and running ansible..."
+ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ec2-user@${BASTION_IP} <<'EOF'
+scource .env
+echo "Installing dependencies..."
+if ! command -v git &> /dev/null
+then
+    echo "Git is not installed. Installing Git..."
+    sudo yum install -y git
+else
+    echo "Git is already installed."
+fi
+
+echo "Cloning Ansible playbook repository..."
+git clone https://github.com/Sahil1709/terraform-ec2-builder.git
+cd terraform-ec2-builder
+git checkout multi-os-ec2
+chmod +x scripts/*
+cd scripts
+./scripts/install_ansible.sh
+./scripts/run_ansible.sh
+EOF
+
+echo "run_now.sh script completed successfully."
+
+
+

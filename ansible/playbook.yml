@@ -1,0 +1,35 @@
+---
+- name: Manage EC2 instances
+  hosts: private_instances
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update package cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Update packages (RedHat/Amazon Linux)
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Check Docker version
+      command: docker --version
+      register: docker_version
+      ignore_errors: yes
+
+    - name: Display Docker version
+      debug:
+        msg: "Docker version: {{ docker_version.stdout | default('Docker not installed or error') }}"
+
+    - name: Report disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Show disk usage
+      debug:
+        var: disk_usage.stdout_lines
