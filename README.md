@@ -35,6 +35,7 @@ This project automates the following:
 ├── scripts/
 |   ├── install_ansible.sh   # Terraform Destroy
 |   ├── run_ansible.sh       # Install script 
+|   ├── destroy.sh           # Destroy AWS infra
 ├── run_now.sh               # Entrypoint
 ├── .env                     # env file
 └── README.md                # This file
@@ -66,17 +67,10 @@ export SSH_KEY_PATH="/Users/sahil/Downloads/labsuser.pem"
 ```
 (add values for aws credentials in this file)
 
-### 2. Run the script
+### 3. Run the script
 ```sh
 chmod +x run_now.sh
 ./run_now.sh
-```
-
-### 3. Verify the Deployment:
-The run now script by default will run the tests to verify the deployment. You can also run it manually
-```sh
-chmod +x scripts/*
-./scripts/test.sh
 ```
 
 #### 4. (Optional Destroy script)
