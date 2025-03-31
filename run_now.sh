@@ -21,12 +21,7 @@ echo "Detected public IP: ${MY_IP}"
 # Run Terraform
 echo "Initializing Terraform..."
 cd "${TERRAFORM_DIR}"
-if [ ! -d ".terraform" ]; then
-  echo "Terraform not initialized. Initializing now..."
-  terraform init
-else
-  echo "Terraform already initialized. Skipping initialization."
-fi
+terraform init
 
 echo "Planning infrastructure..."
 terraform plan \
